@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: unknown
 stopped_at: Completed 05-kubernetes-deployment-01-PLAN.md
-last_updated: "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+last_updated: "2026-05-31T09:18:25.301Z"
 progress:
   total_phases: 10
   completed_phases: 5
