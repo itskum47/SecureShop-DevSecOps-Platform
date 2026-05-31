@@ -111,11 +111,12 @@ jobs:
             sed -i "s|/backend:latest|/secureshop-backend:${{ github.sha }}|g" $f
             sed -i "s|/frontend:latest|/secureshop-frontend:${{ github.sha }}|g" $f
           done
+          kubectl apply -f https://github.com/kubernetes/kube-state-metrics/releases/download/v2.10.0/standard/
           kubectl apply -f k8s/
           
       - name: Wait for pods
         run: |
-          kubectl wait --for=condition=ready pod --all --timeout=120s
+          kubectl wait --for=condition=ready pod --all --timeout=300s
       - name: Port Forward Frontend
         run: |
           kubectl port-forward svc/frontend-service 8080:80 &
