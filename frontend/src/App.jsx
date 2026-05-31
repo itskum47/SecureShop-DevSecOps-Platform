@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import Login from './components/Login'
+import Register from './components/Register'
 import ProductList from './components/ProductList'
 import Cart from './components/Cart'
 import './App.css'
 
 function App() {
   const [token, setToken] = useState(null)
+  const [userId, setUserId] = useState(null)
+  const [showRegister, setShowRegister] = useState(false)
   const [cartItems, setCartItems] = useState([])
 
   const addToCart = (product) => {
@@ -25,6 +28,7 @@ function App() {
 
   const logout = () => {
     setToken(null)
+    setUserId(null)
     setCartItems([])
   }
 
@@ -33,7 +37,11 @@ function App() {
       <h1>SecureShop DevSecOps Platform</h1>
       
       {!token ? (
-        <Login setToken={setToken} />
+        showRegister ? (
+          <Register setToken={setToken} setUserId={setUserId} setShowRegister={setShowRegister} />
+        ) : (
+          <Login setToken={setToken} setUserId={setUserId} setShowRegister={setShowRegister} />
+        )
       ) : (
         <div>
           <button onClick={logout} style={{ marginBottom: '20px' }}>Logout</button>

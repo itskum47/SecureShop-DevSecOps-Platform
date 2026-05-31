@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Login = ({ setToken, setUserId, setShowRegister }) => {
+const Register = ({ setToken, setUserId, setShowRegister }) => {
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/auth/login', { email, password });
+      const res = await axios.post('/api/auth/register', { email, username, password });
       setToken(res.data.token);
       setUserId(res.data._id);
     } catch (err) {
-      setError('Invalid credentials');
+      setError('Registration failed');
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login to SecureShop</h2>
+    <div className="register-container">
+      <h2>Register for SecureShop</h2>
       {error && <p className="error" style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
@@ -31,6 +32,14 @@ const Login = ({ setToken, setUserId, setShowRegister }) => {
           />
         </div>
         <div>
+          <label>Username: </label>
+          <input 
+            type="text" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)} 
+          />
+        </div>
+        <div>
           <label>Password: </label>
           <input 
             type="password" 
@@ -38,13 +47,13 @@ const Login = ({ setToken, setUserId, setShowRegister }) => {
             onChange={(e) => setPassword(e.target.value)} 
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
-      <button onClick={() => setShowRegister(true)} style={{ marginTop: '10px' }}>
-        Register New Account
+      <button onClick={() => setShowRegister(false)} style={{ marginTop: '10px' }}>
+        Back to Login
       </button>
     </div>
   );
 };
 
-export default Login;
+export default Register;
