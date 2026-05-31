@@ -18,6 +18,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/cart', require('./routes/cart'));
 
 const PORT = process.env.PORT || 5000;
 
