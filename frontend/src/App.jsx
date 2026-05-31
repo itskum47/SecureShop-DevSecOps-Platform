@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import Login from './components/Login'
 import Register from './components/Register'
 import ProductList from './components/ProductList'
@@ -11,8 +12,13 @@ function App() {
   const [showRegister, setShowRegister] = useState(false)
   const [cartItems, setCartItems] = useState([])
 
-  const addToCart = (product) => {
-    setCartItems([...cartItems, product])
+  const addToCart = async (product) => {
+    try {
+      await axios.post('/api/cart/add', { userId, productId: product._id });
+      setCartItems([...cartItems, product]);
+    } catch (error) {
+      console.error('Error adding to cart', error);
+    }
   }
 
   const removeFromCart = (index) => {
@@ -21,9 +27,15 @@ function App() {
     setCartItems(newCart)
   }
 
-  const checkout = () => {
-    alert('Checkout successful!')
-    setCartItems([])
+  const checkout = async () => {
+    try {
+      await axios.post('/api/checkout', { userId });
+      alert('Checkout successful!')
+      setCartItems([])
+    } catch (error) {
+      console.error('Checkout error', error);
+      alert('Checkout failed');
+    }
   }
 
   const logout = () => {
