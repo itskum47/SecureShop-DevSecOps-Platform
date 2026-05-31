@@ -116,7 +116,8 @@ jobs:
             sed -i "s|/backend:latest|/secureshop-backend:${{ github.sha }}|g" $f
             sed -i "s|/frontend:latest|/secureshop-frontend:${{ github.sha }}|g" $f
           done
-          kubectl apply -f https://github.com/kubernetes/kube-state-metrics/releases/download/v2.10.0/standard/
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm install kube-state-metrics prometheus-community/kube-state-metrics
           kubectl apply -f k8s/
           
       - name: Deploy Falco
