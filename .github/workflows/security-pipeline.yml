@@ -55,10 +55,10 @@ jobs:
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
 
       - name: Build Frontend Image
-        run: docker build -t ghcr.io/${{ env.REPO }}/secureshop-frontend:${{ github.sha }} ./frontend
+        run: docker build -f Dockerfile.frontend -t ghcr.io/${{ env.REPO }}/secureshop-frontend:${{ github.sha }} .
         
       - name: Build Backend Image
-        run: docker build -t ghcr.io/${{ env.REPO }}/secureshop-backend:${{ github.sha }} ./backend
+        run: docker build -f Dockerfile.backend -t ghcr.io/${{ env.REPO }}/secureshop-backend:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner on Frontend
         uses: aquasecurity/trivy-action@master
