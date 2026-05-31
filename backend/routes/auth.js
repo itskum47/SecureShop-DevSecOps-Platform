@@ -21,4 +21,19 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// POST /register
+router.post('/register', async (req, res) => {
+    try {
+        const { email, username, password } = req.body;
+        const user = await User.create({ email, username, password });
+        res.status(201).json({
+            _id: user._id,
+            email: user.email,
+            token: 'dummy-token'
+        });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 module.exports = router;
