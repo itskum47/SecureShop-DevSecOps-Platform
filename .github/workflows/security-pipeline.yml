@@ -51,16 +51,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set lowercase repository name
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+
       - name: Build Frontend Image
-        run: docker build -t ghcr.io/${{ github.repository }}/secureshop-frontend:${{ github.sha }} ./frontend
+        run: docker build -t ghcr.io/${{ env.REPO }}/secureshop-frontend:${{ github.sha }} ./frontend
         
       - name: Build Backend Image
-        run: docker build -t ghcr.io/${{ github.repository }}/secureshop-backend:${{ github.sha }} ./backend
+        run: docker build -t ghcr.io/${{ env.REPO }}/secureshop-backend:${{ github.sha }} ./backend
 
       - name: Run Trivy vulnerability scanner on Frontend
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/${{ github.repository }}/secureshop-frontend:${{ github.sha }}'
+          image-ref: 'ghcr.io/${{ env.REPO }}/secureshop-frontend:${{ github.sha }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -70,7 +73,7 @@ jobs:
       - name: Run Trivy vulnerability scanner on Backend
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/${{ github.repository }}/secureshop-backend:${{ github.sha }}'
+          image-ref: 'ghcr.io/${{ env.REPO }}/secureshop-backend:${{ github.sha }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -87,11 +90,11 @@ jobs:
 
       - name: Push Frontend Image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: docker push ghcr.io/${{ github.repository }}/secureshop-frontend:${{ github.sha }}
+        run: docker push ghcr.io/${{ env.REPO }}/secureshop-frontend:${{ github.sha }}
 
       - name: Push Backend Image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: docker push ghcr.io/${{ github.repository }}/secureshop-backend:${{ github.sha }}
+        run: docker push ghcr.io/${{ env.REPO }}/secureshop-backend:${{ github.sha }}
 
   deploy-kind:
     runs-on: ubuntu-latest
@@ -107,8 +110,9 @@ jobs:
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
+          REPO=${GITHUB_REPOSITORY,,}
           for f in k8s/*.yaml; do
-            sed -i "s|\${GITHUB_REPOSITORY}|$GITHUB_REPOSITORY|g" $f
+            sed -i "s|\${GITHUB_REPOSITORY}|$REPO|g" $f
             sed -i "s|/backend:latest|/secureshop-backend:${{ github.sha }}|g" $f
             sed -i "s|/frontend:latest|/secureshop-frontend:${{ github.sha }}|g" $f
           done
