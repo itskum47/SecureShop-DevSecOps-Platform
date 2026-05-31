@@ -1,13 +1,16 @@
 # Roadmap
 
-## Phase 1: Application
+## Phase 1: Application (In Progress)
 
 Build the intentionally vulnerable e-commerce application.
 
-- Build React frontend
-- Build Node.js/Express backend
-- Setup MongoDB connection
-- Implement basic features (Login, Register, Product list, Cart, Checkout)
+- [ ] Build React frontend
+- [x] Build Node.js/Express backend
+- [x] Setup MongoDB connection
+- [x] Implement intentionally vulnerable code (NoSQLi, hardcoded secrets)
+- [ ] Implement basic features (Login, Register, Product list, Cart, Checkout)
+
+**Progress:** 1/x plans completed.
 
 ## Phase 2: Repository Structure
 
