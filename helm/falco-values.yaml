@@ -1,0 +1,22 @@
+customRules:
+  rules-custom.yaml: |-
+    - rule: Shell execution in a container
+      desc: Detect shell execution in a container
+      condition: container.id != host and proc.name in (bash, sh, ksh, zsh, csh) and evt.type = execve
+      output: Shell executed in container (user=%user.name container_id=%container.id container_name=%container.name shell=%proc.name parent=%proc.pname cmdline=%proc.cmdline)
+      priority: WARNING
+      tags: [container, shell]
+
+    - rule: Privilege escalation
+      desc: Detect privilege escalation attempts
+      condition: container.id != host and proc.name = sudo and evt.type = execve
+      output: Privilege escalation in container (user=%user.name container_id=%container.id container_name=%container.name cmdline=%proc.cmdline)
+      priority: WARNING
+      tags: [container, privilege_escalation]
+
+    - rule: Suspicious processes
+      desc: Detect execution of suspicious processes
+      condition: container.id != host and proc.name in (nmap, nc, netcat, curl, wget) and evt.type = execve
+      output: Suspicious process executed in container (user=%user.name container_id=%container.id container_name=%container.name cmdline=%proc.cmdline)
+      priority: WARNING
+      tags: [container, suspicious]
