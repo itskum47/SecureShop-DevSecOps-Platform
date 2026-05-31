@@ -26,6 +26,11 @@ jobs:
         uses: returntocorp/semgrep-action@v1
         with:
           config: "p/default"
+      - name: Checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform/
+          soft_fail: true
 
   dependency-review:
     runs-on: ubuntu-latest
