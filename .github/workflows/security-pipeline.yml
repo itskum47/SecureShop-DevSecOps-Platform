@@ -114,6 +114,12 @@ jobs:
           kubectl apply -f https://github.com/kubernetes/kube-state-metrics/releases/download/v2.10.0/standard/
           kubectl apply -f k8s/
           
+      - name: Deploy Falco
+        run: |
+          helm repo add falcosecurity https://falcosecurity.github.io/charts
+          helm repo update
+          helm install falco falcosecurity/falco -f helm/falco-values.yaml --namespace falco --create-namespace
+
       - name: Wait for pods
         run: |
           kubectl wait --for=condition=ready pod --all --timeout=300s
