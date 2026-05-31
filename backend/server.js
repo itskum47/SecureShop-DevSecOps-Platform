@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const promBundle = require('express-prom-bundle');
 
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
@@ -15,6 +16,17 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+const metricsMiddleware = promBundle({
+    includeMethod: true,
+    includePath: true,
+    includeStatusCode: true,
+    includeUp: true,
+    promClient: {
+        collectDefaultMetrics: {}
+    }
+});
+app.use(metricsMiddleware);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
